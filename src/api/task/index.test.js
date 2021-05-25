@@ -26,24 +26,26 @@ test('GET /users/:user_id/tasks 200' , async () => {
 })
 
 test('GET /users/:user_id/tasks 401' , async () => {
-  const { status, body } = await request(app())
+  const { status } = await request(app())
     .get("/users/" + user1.id + "/tasks")
     .query({ access_token: session2 })
     expect(status).toBe(401)
 })
 
 
-test('GET /users 401', async () => {
-  const { status, body } = await request(app())
+test('GET /users/:user_id/tasks 401', async () => {
+  const { status } = await request(app())
     .get("/users/" + user1.id + "/tasks")
     expect(status).toBe(401)
 })
 
 
 test('GET /users/:user_id/tasks/:task_id 200', async () => {
-  const { status, body } = await request(app())
+  const { status, body} = await request(app())
     .get("/users/" + user1.id + "/tasks/" + task._id)
     .query({ access_token: session1 })
+    expect(body.task).toBe('my Task')
+    expect(body.done).toBe(false)
     expect(status).toBe(200)
 })
 
@@ -61,16 +63,50 @@ test('GET /users/:user_id/tasks/:task_id 500', async () => {
 })
 
 
+test('GET /users/:user_id/tasks/:task_id 401', async () => {
+  const { status, body } = await request(app())
+    .get("/users/" + user1.id + "/tasks/" + "abc")
+    .query({ access_token: session2 })
+    expect(body.message).toBe('access denied')
+    expect(status).toBe(401)
+})
+
+test('GET /users/:user_id/tasks/:task_id 401', async () => {
+  const { status, body } = await request(app())
+    .get("/users/" + "abc" + "/tasks/" + "abc")
+    .query({ access_token: session1 })
+    expect(status).toBe(401)
+})
+
+test('GET /users/:user_id/tasks/:task_id 500', async () => {
+  const { status, body } = await request(app())
+    .get("/users/" + user1.id + "/tasks/" + "abc")
+    .query({ access_token: session2 })
+    expect(status).toBe(401)
+})
+
+
 test('POST /users/:user_id/tasks/ 201', async () => {
   const { status, body } = await request(app())
   .post("/users/" + user1.id + "/tasks")
   .send({ task: 'test' })
   .query({ access_token: session1 })
+  expect(body.task).toBe('test')
+  expect(body.done).toBe(false)
   expect(status).toBe(201)
 })
 
 test('POST /users/:user_id/tasks/ 401', async () => {
   const { status, body } = await request(app())
+  .post("/users/" + user1.id + "/tasks")
+  .send({ task: 'test' })
+  .query({ access_token: session2 })
+  expect(body.message).toBe('access denied')
+  expect(status).toBe(401)
+})
+
+test('POST /users/:user_id/tasks/ 401', async () => {
+  const { status } = await request(app())
   .post("/users/" + user1.id + "/tasks")
   .send({ task: 'test' })
   expect(status).toBe(401)
@@ -79,9 +115,17 @@ test('POST /users/:user_id/tasks/ 401', async () => {
 test('POST /users/:user_id/tasks/ 400', async () => {
   const { status, body } = await request(app())
   .post("/users/" + user1.id + "/tasks")
-  .send({})
+  .send(body)
   .query({ access_token: session1 })
+  expect(body.message).toBe("task is required")
   expect(status).toBe(400)
+})
+
+
+test('POST /users/:user_id/tasks/ 401', async () => {
+  const { status } = await request(app())
+  .post("/users/" + user1.id + "/tasks")
+  expect(status).toBe(401)
 })
 
 
@@ -128,13 +172,13 @@ test('PUT /users/:user_id/tasks/:task_id/done 200', async () => {
 })
 
 test('PUT /users/:user_id/tasks/:task_id/not-done 401', async () => {
-  const { status, body } = await request(app())
+  const { status } = await request(app())
   .put("/users/" + user1.id + "/tasks/" + task._id + "/not-done")
   expect(status).toBe(401)
 })
 
 test('PUT /users/:user_id/tasks/:task_id/not-done 200', async () => {
-  const { status, body } = await request(app())
+  const { status } = await request(app())
   .put("/users/" + user1.id + "/tasks/" + task._id + "/not-done")
   .query({ access_token: session1 })
   expect(status).toBe(200)

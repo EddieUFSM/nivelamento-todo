@@ -3,14 +3,12 @@ import { Task } from '.'
 
 export const index = ({ querymen: { query, select, cursor } }, res, next) =>
   Task.find(query, select, cursor)
-    .then((tasks) => tasks)
     .then(success(res))
     .catch(next)
-
+  
 
 export const tasksByUser = ({ params }, res, next) =>
   Task.find({user_id: params.user_id})
-    .then((tasks) => tasks)
     .then(success(res))
     .catch(next)
 
@@ -24,17 +22,9 @@ export const show = ({ params }, res, next) =>
 export const create = ({ bodymen: { body }, params }, res, next) =>
   Task.create({task: body.task, user_id: params.user_id})
     .then(success(res, 201))
-    .catch((err) => {
-      /* istanbul ignore else */
-      if (err) {
-        res.status(400).json({
-        })
-      } else {
-        next(err)
-      }
-    })
+    .catch(next)
 
-export const rename = ({ bodymen: { body }, params, user }, res, next) =>
+export const rename = ({ bodymen: { body }, params }, res, next) =>
   Task.findByIdAndUpdate(params.task_id, {task: body.task})
     .then(notFound(res))
     .then((result) => {
@@ -43,7 +33,7 @@ export const rename = ({ bodymen: { body }, params, user }, res, next) =>
     .then(success(res))
     .catch(next)
 
-export const taskDone = ({ params, user }, res, next) =>
+export const taskDone = ({ params }, res, next) =>
   Task.findByIdAndUpdate(params.task_id, {done: true})
     .then(notFound(res))
     .then((result) => {
@@ -52,7 +42,7 @@ export const taskDone = ({ params, user }, res, next) =>
     .then(success(res))
     .catch(next)
 
-export const taskNotDone = ({params, user }, res, next) =>
+export const taskNotDone = ({params }, res, next) =>
   Task.findByIdAndUpdate(params.task_id, {done: false})
     .then(notFound(res))
      .then((result) => {

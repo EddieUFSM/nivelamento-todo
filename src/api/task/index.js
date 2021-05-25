@@ -11,7 +11,7 @@ const router = new Router()
 const { task, done } = schema.tree
 
 /**
- * @api {get} /tasks/me Retrieve current task
+ * @api {get} /users/:user_id/tasks Retrieve current task
  * @apiName RetrieveCurrentTask
  * @apiGroup Task
  * @apiPermission none
@@ -24,17 +24,19 @@ router.get('/users/:user_id/tasks',
   tasksByUser)
 
 /**
- * @api {get} /tasks/:id Retrieve task
+ * @api {get} /users/:user_id/tasks/:task_id Retrieve task
  * @apiName RetrieveTask
  * @apiGroup Task
- * @apiPermission private
+ * @apiPermission none
  * @apiSuccess {Object} task Task's data.
  * @apiError 404 Task not found.
  */
 router.get('/users/:user_id/tasks/:task_id',
   token({ required: true }),
   compare_logged_identity_with_identity_id_param(),
+  query(),
   show)
+
 /**
  * @api {post} /users/:user_id/tasks Create task
  * @apiName CreateTask

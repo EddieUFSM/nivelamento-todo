@@ -18,4 +18,9 @@ describe('set task', () => {
     expect(task.done).toBe(true)
   })
 
+  it('sets status not-done automatically', () => {
+    task.done = false
+    expect(task.done).toBe(false)
+  })
+
 })
