@@ -39,7 +39,7 @@ const config = {
   test: { },
   development: {
     mongo: {
-      uri: 'mongodb://mongo:27017/todo-dev',
+      uri: 'mongodb://localhost:27017/todo-dev',
       options: {
         debug: true
       }

@@ -2,6 +2,7 @@ import { Router } from 'express'
 import { middleware as query } from 'querymen'
 import { middleware as body } from 'bodymen'
 import { password as passwordAuth, master, token } from '../../services/passport'
+import {compare_logged_identity_with_identity_id_param} from '../../services/middleware/compare_logged_identity_identity_id_params'
 import { index, show, create, tasksByUser, taskDone, taskNotDone, rename , destroy} from './controller'
 import { schema } from './model'
 export Task, { schema } from './model'
@@ -43,6 +44,7 @@ router.get('/users/:user_id/tasks/:task_id',
  */
 router.post('/users/:user_id/tasks',
     token({ required: true }),
+    compare_logged_identity_with_identity_id_param(),
     body({ task }),
     create)
 
