@@ -20,6 +20,7 @@ const { task, done } = schema.tree
  */
 router.get('/users/:user_id/tasks',
   token({ required: true }),
+  compare_logged_identity_with_identity_id_param(),
   tasksByUser)
 
 /**
@@ -31,8 +32,9 @@ router.get('/users/:user_id/tasks',
  * @apiError 404 Task not found.
  */
 router.get('/users/:user_id/tasks/:task_id',
-    token({ required: true }),
-    show)
+  token({ required: true }),
+  compare_logged_identity_with_identity_id_param(),
+  show)
 /**
  * @api {post} /users/:user_id/tasks Create task
  * @apiName CreateTask
@@ -43,10 +45,10 @@ router.get('/users/:user_id/tasks/:task_id',
  * @apiError {Object} 400 Some parameters may contain invalid values.
  */
 router.post('/users/:user_id/tasks',
-    token({ required: true }),
-    compare_logged_identity_with_identity_id_param(),
-    body({ task }),
-    create)
+  token({ required: true }),
+  compare_logged_identity_with_identity_id_param(),
+  body({ task }),
+  create)
 
 /**
  * @api {put} /users/:user_id/tasks/rename rename task
@@ -57,7 +59,8 @@ router.post('/users/:user_id/tasks',
  * @apiError 404 Task not found.
  */
 router.put('/users/:user_id/tasks/:task_id/rename',
-token({ required: true }),
+  token({ required: true }),
+  compare_logged_identity_with_identity_id_param(),
   body({ task }),
   rename)
 
@@ -69,8 +72,9 @@ token({ required: true }),
  * @apiError 404 Task not found.
  */
 router.put('/users/:user_id/tasks/:task_id/done',
-    token({ required: true }),
-    taskDone)
+  token({ required: true }),
+  compare_logged_identity_with_identity_id_param(),
+  taskDone)
 
 /**
  * @api {put} /users/:user_id/tasks/done rename task
@@ -79,9 +83,10 @@ router.put('/users/:user_id/tasks/:task_id/done',
  * @apiPermission task
  * @apiError 404 Task not found.
  */
- router.put('/users/:user_id/tasks/:task_id/not-done',
- token({ required: true }),
-    taskNotDone)
+router.put('/users/:user_id/tasks/:task_id/not-done',
+  token({ required: true }),
+  compare_logged_identity_with_identity_id_param(),
+  taskNotDone)
 
 /**
  * @api {delete} /users/:user_id/tasks/:id Delete task
@@ -92,7 +97,8 @@ router.put('/users/:user_id/tasks/:task_id/done',
  * @apiError 404 Task not found.
  */
 router.delete('/users/:user_id/tasks/:task_id',
-token({ required: true }),
+  token({ required: true }),
+  compare_logged_identity_with_identity_id_param(),
   destroy)
 
 export default router

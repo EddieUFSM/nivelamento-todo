@@ -7,12 +7,14 @@ import routes, { Task } from './'
 
 const app = () => express(apiRoot, routes)
 
-let user1, session1, task
+let user1,user2, session1, session2, task
 
 beforeEach(async () => {
-  user1 = await User.create({ name: 'user', email: 'a@a.com', password: '123456' })
+  user1 = await User.create({ name: 'userA', email: 'a@a.com', password: '123456' })
+  user2 = await User.create({ name: 'userB', email: 'b@b.com', password: '123456' })
   task = await Task.create({task: "my Task", user_id: user1.id})
   session1 = signSync(user1.id)
+  session2 = signSync(user2.id)
 })
 
 test('GET /users/:user_id/tasks 200' , async () => {
@@ -23,12 +25,11 @@ test('GET /users/:user_id/tasks 200' , async () => {
     expect(Array.isArray(body)).toBe(true)
 })
 
-
-test('GET /users/abc/tasks 500' , async () => {
+test('GET /users/:user_id/tasks 401' , async () => {
   const { status, body } = await request(app())
-    .get("/users/" + "abc"+ "/tasks")
-    .query({ access_token: session1 })
-    expect(status).toBe(500)
+    .get("/users/" + user1.id + "/tasks")
+    .query({ access_token: session2 })
+    expect(status).toBe(401)
 })
 
 
