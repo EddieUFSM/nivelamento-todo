@@ -11,11 +11,11 @@ let user1, session1, task
 
 beforeEach(async () => {
   user1 = await User.create({ name: 'user', email: 'a@a.com', password: '123456' })
-  task = await Task.create({task: "my Task", userId: user1.id})
+  task = await Task.create({task: "my Task", user_id: user1.id})
   session1 = signSync(user1.id)
 })
 
-test('GET /users/:userId/tasks 200' , async () => {
+test('GET /users/:user_id/tasks 200' , async () => {
   const { status, body } = await request(app())
     .get("/users/" + user1.id + "/tasks")
     .query({ access_token: session1 })
@@ -39,20 +39,20 @@ test('GET /users 401', async () => {
 })
 
 
-test('GET /users/:userId/tasks/:taskId 200', async () => {
+test('GET /users/:user_id/tasks/:task_id 200', async () => {
   const { status, body } = await request(app())
     .get("/users/" + user1.id + "/tasks/" + task._id)
     .query({ access_token: session1 })
     expect(status).toBe(200)
 })
 
-test('GET /users/:userId/tasks/:taskId 401', async () => {
+test('GET /users/:user_id/tasks/:task_id 401', async () => {
   const { status, body } = await request(app())
     .get("/users/" + user1.id + "/tasks/" + task._id)
     expect(status).toBe(401)
 })
 
-test('GET /users/:userId/tasks/:taskId 500', async () => {
+test('GET /users/:user_id/tasks/:task_id 500', async () => {
   const { status, body } = await request(app())
     .get("/users/" + user1.id + "/tasks/" + "abc")
     .query({ access_token: session1 })
@@ -60,7 +60,7 @@ test('GET /users/:userId/tasks/:taskId 500', async () => {
 })
 
 
-test('POST /users/:userId/tasks/ 201', async () => {
+test('POST /users/:user_id/tasks/ 201', async () => {
   const { status, body } = await request(app())
   .post("/users/" + user1.id + "/tasks")
   .send({ task: 'test' })
@@ -68,14 +68,14 @@ test('POST /users/:userId/tasks/ 201', async () => {
   expect(status).toBe(201)
 })
 
-test('POST /users/:userId/tasks/ 401', async () => {
+test('POST /users/:user_id/tasks/ 401', async () => {
   const { status, body } = await request(app())
   .post("/users/" + user1.id + "/tasks")
   .send({ task: 'test' })
   expect(status).toBe(401)
 })
 
-test('POST /users/:userId/tasks/ 400', async () => {
+test('POST /users/:user_id/tasks/ 400', async () => {
   const { status, body } = await request(app())
   .post("/users/" + user1.id + "/tasks")
   .send({})
@@ -84,7 +84,7 @@ test('POST /users/:userId/tasks/ 400', async () => {
 })
 
 
-test('PUT /users/:userId/tasks/:taskId/rename 401', async () => {
+test('PUT /users/:user_id/tasks/:task_id/rename 401', async () => {
   const { status, body } = await request(app())
   .put("/users/" + user1.id + "/tasks/" + task._id + "/rename")
   .send({task: "new name"})
@@ -93,7 +93,7 @@ test('PUT /users/:userId/tasks/:taskId/rename 401', async () => {
 
 
 
-test('PUT /users/:userId/tasks/:taskId/rename 400', async () => {
+test('PUT /users/:user_id/tasks/:task_id/rename 400', async () => {
   const { status, body } = await request(app())
   .put("/users/" + user1.id + "/tasks/" + task._id + "/rename")
   .send({})
@@ -101,7 +101,7 @@ test('PUT /users/:userId/tasks/:taskId/rename 400', async () => {
   expect(status).toBe(400)
 })
 
-test('PUT /users/:userId/tasks/:taskId/rename 200', async () => {
+test('PUT /users/:user_id/tasks/:task_id/rename 200', async () => {
   const { status, body } = await request(app())
   .put("/users/" + user1.id + "/tasks/" + task._id + "/rename")
   .send({task: "new name"})
@@ -111,14 +111,14 @@ test('PUT /users/:userId/tasks/:taskId/rename 200', async () => {
 })
 
 
-test('PUT /users/:userId/tasks/:taskId/done 401', async () => {
+test('PUT /users/:user_id/tasks/:task_id/done 401', async () => {
   const { status, body } = await request(app())
   .put("/users/" + user1.id + "/tasks/" + task._id + "/done")
   expect(status).toBe(401)
 })
 
 
-test('PUT /users/:userId/tasks/:taskId/done 200', async () => {
+test('PUT /users/:user_id/tasks/:task_id/done 200', async () => {
   const { status, body } = await request(app())
   .put("/users/" + user1.id + "/tasks/" + task._id + "/done")
   .query({ access_token: session1 })
@@ -126,13 +126,13 @@ test('PUT /users/:userId/tasks/:taskId/done 200', async () => {
   expect(status).toBe(200)
 })
 
-test('PUT /users/:userId/tasks/:taskId/not-done 401', async () => {
+test('PUT /users/:user_id/tasks/:task_id/not-done 401', async () => {
   const { status, body } = await request(app())
   .put("/users/" + user1.id + "/tasks/" + task._id + "/not-done")
   expect(status).toBe(401)
 })
 
-test('PUT /users/:userId/tasks/:taskId/not-done 200', async () => {
+test('PUT /users/:user_id/tasks/:task_id/not-done 200', async () => {
   const { status, body } = await request(app())
   .put("/users/" + user1.id + "/tasks/" + task._id + "/not-done")
   .query({ access_token: session1 })
@@ -140,7 +140,7 @@ test('PUT /users/:userId/tasks/:taskId/not-done 200', async () => {
 })
 
 
-test('DELETE /users/:userId/tasks/:taskId/ 204 ', async () => {
+test('DELETE /users/:user_id/tasks/:task_id/ 204 ', async () => {
   const { status } = await request(app())
     .delete("/users/" + user1.id + "/tasks/" + task._id)
     .send({ access_token: session1 })
@@ -148,14 +148,14 @@ test('DELETE /users/:userId/tasks/:taskId/ 204 ', async () => {
 })
 
 
-test('DELETE /users/:userId/tasks/:taskId/ 500 ', async () => {
+test('DELETE /users/:user_id/tasks/:task_id/ 500 ', async () => {
   const { status } = await request(app())
     .delete("/users/" + user1.id + "/tasks/" + "abc")
     .send({ access_token: session1 })
   expect(status).toBe(500)
 })
 
-test('DELETE /users/:userId/tasks/:taskId/ 401 ', async () => {
+test('DELETE /users/:user_id/tasks/:task_id/ 401 ', async () => {
   const { status } = await request(app())
     .delete("/users/" + user1.id + "/tasks/" + task._id)
   expect(status).toBe(401)
