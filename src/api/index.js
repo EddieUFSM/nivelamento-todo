@@ -28,8 +28,9 @@ const router = new Router()
  * @apiParam {String[]} [sort=-createdAt] Order of returned items.
  * @apiParam {String[]} [fields] Fields to be returned.
  */
+
+router.use('/tasks', task)
 router.use('/users', user)
 router.use('/auth', auth)
-router.use('/', task)
 
 export default router

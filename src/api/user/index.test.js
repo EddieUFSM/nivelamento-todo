@@ -380,9 +380,4 @@ test('DELETE /users/:id 401', async () => {
   expect(status).toBe(401)
 })
 
-test('DELETE /users/:id 404 (admin)', async () => {
-  const { status } = await request(app())
-    .delete(apiRoot + '/123456789098765432123456')
-    .send({ access_token: adminSession })
-  expect(status).toBe(404)
-})
+

@@ -2,9 +2,13 @@ import { success, notFound } from '../../services/response/'
 import { Task } from '.'
 
 
-export const tasksByUser = ({ params }, res, next) =>
-  Task.find({ user_id: params.userId})
+export const tasksByUser = ({user}, res, next) =>
+  Task.find({ user_id: user._id})
     .then(success(res))
+    .catch((err)=> {
+      console.log(err)
+      return Promise.reject(err)
+    })
     .catch(next)
 
 export const show = ({ params }, res, next) =>
@@ -14,10 +18,19 @@ export const show = ({ params }, res, next) =>
     .then(success(res))
     .catch(next)
 
-export const create = ({ bodymen: { body }, params }, res, next) =>
-  Task.create({task: body.task, user_id: params.userId})
-    .then(success(res, 201))
-    .catch(next)
+
+
+export const create = (req, res, next) =>
+  Task.create({task: req.body.task, user_id: req.user._id })
+  .then(notFound(res))
+  .then((result) => {
+    if (!result) { return null } else { return result}
+  })
+  .then(success(res))
+  .catch(next)
+  
+
+
 
 export const rename = ({ bodymen: { body }, params }, res, next) =>
   Task.findById(params.taskId)

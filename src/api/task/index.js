@@ -2,8 +2,7 @@ import { Router } from 'express'
 import { middleware as query } from 'querymen'
 import { middleware as body } from 'bodymen'
 import { password as passwordAuth, master, token } from '../../services/passport'
-import {compare_logged_identity_with_identity_id_param} from '../../services/middleware/compare_logged_identity_identity_id_params'
-import { index, show, create, tasksByUser, taskDone, taskNotDone, rename , destroy} from './controller'
+import { show, create, tasksByUser, taskDone, taskNotDone, rename , destroy} from './controller'
 import { schema } from './model'
 export Task, { schema } from './model'
 
@@ -11,46 +10,42 @@ const router = new Router()
 const { task, done } = schema.tree
 
 /**
- * @api {get} /users/:userId/tasks Retrieve current task
+ * @api {get} / Retrieve current task
  * @apiName RetrieveCurrentTask
  * @apiGroup Task
  * @apiPermission none
  * @apiParam {String} access_token Task access_token.
  * @apiSuccess {Object} task Task's data.
  */
-router.get('/users/:userId/tasks',
+router.get('/',
   token({ required: true }),
-  compare_logged_identity_with_identity_id_param(),
   tasksByUser)
 
 /**
- * @api {get} /users/:userId/tasks/:taskId Retrieve task
+ * @api {get} /:taskId Retrieve task
  * @apiName RetrieveTask
  * @apiGroup Task
  * @apiPermission none
  * @apiSuccess {Object} task Task's data.
  * @apiError 404 Task not found.
  */
-router.get('/users/:userId/tasks/:taskId',
+router.get('/:taskId',
   token({ required: true }),
-  compare_logged_identity_with_identity_id_param(),
   query(),
   show)
 
-/**
- * @api {post} /users/:userId/tasks Create task
- * @apiName CreateTask
+  /**
+ * @api {post} / Retrieve task
+ * @apiName RetrieveTask
  * @apiGroup Task
  * @apiPermission none
- * @apiParam {String} task 
- * @apiSuccess (Sucess 201) {Object} task Task's data.
- * @apiError {Object} 400 Some parameters may contain invalid values.
+ * @apiSuccess {Object} task Task's data.
+ * @apiError 404 Task not found.
  */
-router.post('/users/:userId/tasks',
+
+router.post("/", 
   token({ required: true }),
-  compare_logged_identity_with_identity_id_param(),
-  body({ task }),
-  create)
+  create);
 
 /**
  * @api {put} /users/:userId/tasks/rename rename task
@@ -60,9 +55,8 @@ router.post('/users/:userId/tasks',
  * @apiParam {String} [task] Task's name.
  * @apiError 404 Task not found.
  */
-router.put('/users/:userId/tasks/:taskId/rename',
+router.put('/:taskId/rename',
   token({ required: true }),
-  compare_logged_identity_with_identity_id_param(),
   body({ task }),
   rename)
 
@@ -73,9 +67,8 @@ router.put('/users/:userId/tasks/:taskId/rename',
  * @apiPermission task
  * @apiError 404 Task not found.
  */
-router.put('/users/:userId/tasks/:taskId/done',
+router.put('/:taskId/done',
   token({ required: true }),
-  compare_logged_identity_with_identity_id_param(),
   taskDone)
 
 /**
@@ -85,9 +78,8 @@ router.put('/users/:userId/tasks/:taskId/done',
  * @apiPermission task
  * @apiError 404 Task not found.
  */
-router.put('/users/:userId/tasks/:taskId/not-done',
+router.put('/:taskId/not-done',
   token({ required: true }),
-  compare_logged_identity_with_identity_id_param(),
   taskNotDone)
 
 /**
@@ -98,9 +90,8 @@ router.put('/users/:userId/tasks/:taskId/not-done',
  * @apiSuccess (Success 204) 204 No Content.
  * @apiError 404 Task not found.
  */
-router.delete('/users/:userId/tasks/:taskId',
+router.delete('/:taskId',
   token({ required: true }),
-  compare_logged_identity_with_identity_id_param(),
   destroy)
 
 export default router

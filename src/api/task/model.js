@@ -32,7 +32,7 @@ taskSchema.methods = {
   }
 };
 
-taskSchema.plugin(mongooseKeywords, { paths: ['task', 'done'] })
+taskSchema.plugin(mongooseKeywords, { paths: ['task', 'done', 'user_id'] })
 
 const model = mongoose.model('Task', taskSchema)
 
