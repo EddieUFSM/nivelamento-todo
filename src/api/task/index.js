@@ -11,34 +11,34 @@ const router = new Router()
 const { task, done } = schema.tree
 
 /**
- * @api {get} /users/:user_id/tasks Retrieve current task
+ * @api {get} /users/:userId/tasks Retrieve current task
  * @apiName RetrieveCurrentTask
  * @apiGroup Task
  * @apiPermission none
  * @apiParam {String} access_token Task access_token.
  * @apiSuccess {Object} task Task's data.
  */
-router.get('/users/:user_id/tasks',
+router.get('/users/:userId/tasks',
   token({ required: true }),
   compare_logged_identity_with_identity_id_param(),
   tasksByUser)
 
 /**
- * @api {get} /users/:user_id/tasks/:task_id Retrieve task
+ * @api {get} /users/:userId/tasks/:taskId Retrieve task
  * @apiName RetrieveTask
  * @apiGroup Task
  * @apiPermission none
  * @apiSuccess {Object} task Task's data.
  * @apiError 404 Task not found.
  */
-router.get('/users/:user_id/tasks/:task_id',
+router.get('/users/:userId/tasks/:taskId',
   token({ required: true }),
   compare_logged_identity_with_identity_id_param(),
   query(),
   show)
 
 /**
- * @api {post} /users/:user_id/tasks Create task
+ * @api {post} /users/:userId/tasks Create task
  * @apiName CreateTask
  * @apiGroup Task
  * @apiPermission none
@@ -46,59 +46,59 @@ router.get('/users/:user_id/tasks/:task_id',
  * @apiSuccess (Sucess 201) {Object} task Task's data.
  * @apiError {Object} 400 Some parameters may contain invalid values.
  */
-router.post('/users/:user_id/tasks',
+router.post('/users/:userId/tasks',
   token({ required: true }),
   compare_logged_identity_with_identity_id_param(),
   body({ task }),
   create)
 
 /**
- * @api {put} /users/:user_id/tasks/rename rename task
+ * @api {put} /users/:userId/tasks/rename rename task
  * @apiName UpdateTask
  * @apiGroup Task
  * @apiPermission task
  * @apiParam {String} [task] Task's name.
  * @apiError 404 Task not found.
  */
-router.put('/users/:user_id/tasks/:task_id/rename',
+router.put('/users/:userId/tasks/:taskId/rename',
   token({ required: true }),
   compare_logged_identity_with_identity_id_param(),
   body({ task }),
   rename)
 
 /**
- * @api {put} /users/:user_id/tasks/done rename task
+ * @api {put} /users/:userId/tasks/done rename task
  * @apiName UpdateTask
  * @apiGroup Task
  * @apiPermission task
  * @apiError 404 Task not found.
  */
-router.put('/users/:user_id/tasks/:task_id/done',
+router.put('/users/:userId/tasks/:taskId/done',
   token({ required: true }),
   compare_logged_identity_with_identity_id_param(),
   taskDone)
 
 /**
- * @api {put} /users/:user_id/tasks/done rename task
+ * @api {put} /users/:userId/tasks/done rename task
  * @apiName UpdateTask
  * @apiGroup Task
  * @apiPermission task
  * @apiError 404 Task not found.
  */
-router.put('/users/:user_id/tasks/:task_id/not-done',
+router.put('/users/:userId/tasks/:taskId/not-done',
   token({ required: true }),
   compare_logged_identity_with_identity_id_param(),
   taskNotDone)
 
 /**
- * @api {delete} /users/:user_id/tasks/:id Delete task
+ * @api {delete} /users/:userId/tasks/:id Delete task
  * @apiName DeleteTask
  * @apiGroup Task
  * @apiParam {String} access_token Task access_token.
  * @apiSuccess (Success 204) 204 No Content.
  * @apiError 404 Task not found.
  */
-router.delete('/users/:user_id/tasks/:task_id',
+router.delete('/users/:userId/tasks/:taskId',
   token({ required: true }),
   compare_logged_identity_with_identity_id_param(),
   destroy)
