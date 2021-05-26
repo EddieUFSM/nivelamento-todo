@@ -1,5 +1,6 @@
 import mongoose, { Schema, Types } from 'mongoose'
 import mongooseKeywords from 'mongoose-keywords'
+
 const taskSchema = new Schema({
   task: {
     type: String,
@@ -19,7 +20,17 @@ const taskSchema = new Schema({
   timestamps: true
 })
 
-
+taskSchema.methods = {
+  complete() {
+    return this.set("done", true).save();
+  },
+  notcomplete() {
+    return this.set("done", false).save();
+  },
+  rename(newName) {
+    return this.set("task", newName).save();
+  }
+};
 
 taskSchema.plugin(mongooseKeywords, { paths: ['task', 'done'] })
 

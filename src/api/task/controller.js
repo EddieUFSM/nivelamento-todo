@@ -20,8 +20,9 @@ export const create = ({ bodymen: { body }, params }, res, next) =>
     .catch(next)
 
 export const rename = ({ bodymen: { body }, params }, res, next) =>
-  Task.findByIdAndUpdate(params.taskId, {task: body.task})
+  Task.findById(params.taskId)
     .then(notFound(res))
+    .then(task => task.rename(body.task))
     .then((result) => {
       if (!result) { return null } else { return result}
     })
@@ -29,8 +30,9 @@ export const rename = ({ bodymen: { body }, params }, res, next) =>
     .catch(next)
 
 export const taskDone = ({ params }, res, next) =>
-  Task.findByIdAndUpdate(params.taskId, {done: true})
+  Task.findById(params.taskId)
     .then(notFound(res))
+    .then(task => task.complete())
     .then((result) => {
       if (!result) { return null } else { return result}
     })
@@ -38,9 +40,10 @@ export const taskDone = ({ params }, res, next) =>
     .catch(next)
 
 export const taskNotDone = ({params }, res, next) =>
-  Task.findByIdAndUpdate(params.taskId, {done: false})
+  Task.findById(params.taskId)
     .then(notFound(res))
-     .then((result) => {
+    .then(task => task.notcomplete())
+    .then((result) => {
       if (!result) { return null } else { return result}
     })
     .then(success(res))
